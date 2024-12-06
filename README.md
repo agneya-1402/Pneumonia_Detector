@@ -157,8 +157,8 @@ def evaluate_model(model, dataloader):
 
 ### Example Input
 
-![NORMAL2-IM-0362-0001.jpeg](NORMAL2-IM-0362-0001.jpeg)
-![NORMAL2-IM-0012-0001.jpeg](NORMAL2-IM-0012-0001.jpeg)
+![NORMAL2-IM-0362-0001.jpeg](https://github.com/agneya-1402/Pneumonia_Detector/blob/main/test_results/IM-0010-0001.jpeg)
+![NORMAL2-IM-0012-0001.jpeg](https://github.com/agneya-1402/Pneumonia_Detector/blob/main/test_results/IM-0025-0001.jpeg)
 
 ---
 
