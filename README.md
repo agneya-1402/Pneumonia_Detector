@@ -39,7 +39,6 @@ You can download a similar dataset from [Kaggle Chest X-Ray Images](https://www.
 The model uses **DenseNet121**, a pre-trained model available in `torchvision.models`. Its final layer is replaced with a fully connected layer for binary classification.
 
 ```python
-# Load DenseNet121 model
 model = models.densenet121(pretrained=True)
 num_features = model.classifier.in_features
 model.classifier = nn.Linear(num_features, 2)  # Binary classification (NORMAL vs PNEUMONIA)
@@ -81,7 +80,6 @@ datasets_dict = {
     'test': datasets.ImageFolder(test_dir, transform=data_transforms['test']),
 }
 
-# Create dataloaders
 dataloaders = {
     'train': DataLoader(datasets_dict['train'], batch_size=32, shuffle=True),
     'val': DataLoader(datasets_dict['val'], batch_size=32, shuffle=False),
