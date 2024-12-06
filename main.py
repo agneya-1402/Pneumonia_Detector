@@ -7,10 +7,9 @@ from torch.utils.data import DataLoader
 from tqdm import tqdm
 
 def main():
-    # Device configuration
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    device = torch.device("cpu")
 
-    # Dataset paths (update these paths with the dataset locations)
+    # Dataset paths 
     train_dir = "chest_xray/chest_xray/train"
     val_dir = "chest_xray/chest_xray/val"
     test_dir = "chest_xray/chest_xray/test"
@@ -35,70 +34,63 @@ def main():
         ]),
     }
 
-    # Load datasets
+    # load datasets
     datasets_dict = {
         'train': datasets.ImageFolder(train_dir, transform=data_transforms['train']),
         'val': datasets.ImageFolder(val_dir, transform=data_transforms['val']),
         'test': datasets.ImageFolder(test_dir, transform=data_transforms['test']),
     }
 
-    # Create data loaders
+    # data loaders
     dataloaders = {
         'train': DataLoader(datasets_dict['train'], batch_size=32, shuffle=True, num_workers=4),
         'val': DataLoader(datasets_dict['val'], batch_size=32, shuffle=False, num_workers=4),
         'test': DataLoader(datasets_dict['test'], batch_size=32, shuffle=False, num_workers=4),
     }
 
-    # Load DenseNet121 model
+    # DenseNet121
     model = models.densenet121(pretrained=True)
     num_features = model.classifier.in_features
     model.classifier = nn.Linear(num_features, 2)  # Binary classification (NORMAL vs PNEUMONIA)
     model = model.to(device)
 
-    # Loss function and optimizer
+    # Loss function & optimizer
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=0.001)
 
-    # Training and validation function
+    # train & val function
     def train_model(model, dataloaders, criterion, optimizer, num_epochs=5):
         for epoch in range(num_epochs):
             print(f"Epoch {epoch + 1}/{num_epochs}")
             print("-" * 20)
 
-            # Each epoch has a training and validation phase
             for phase in ['train', 'val']:
                 if phase == 'train':
-                    model.train()  # Set model to training mode
+                    model.train()  # train mode
                 else:
-                    model.eval()   # Set model to evaluate mode
+                    model.eval()   # eval mode
 
                 running_loss = 0.0
                 running_corrects = 0
                 total_samples = 0
-
-                # Timer for epoch
                 start_time = time.time()
-
-                # Iterate over data
                 with tqdm(dataloaders[phase], unit="batch") as tepoch:
                     for inputs, labels in tepoch:
                         inputs, labels = inputs.to(device), labels.to(device)
-
-                        # Zero the parameter gradients
                         optimizer.zero_grad()
 
-                        # Forward
+                        # FW
                         with torch.set_grad_enabled(phase == 'train'):
                             outputs = model(inputs)
                             _, preds = torch.max(outputs, 1)
                             loss = criterion(outputs, labels)
 
-                            # Backward + optimize only if in training phase
+                            # BW
                             if phase == 'train':
                                 loss.backward()
                                 optimizer.step()
 
-                        # Statistics
+                        # stats
                         running_loss += loss.item() * inputs.size(0)
                         running_corrects += torch.sum(preds == labels.data)
                         total_samples += inputs.size(0)
@@ -108,7 +100,6 @@ def main():
                             accuracy=(running_corrects.double().item() / total_samples)
                         )
 
-                # Timer end
                 epoch_time = time.time() - start_time
                 epoch_loss = running_loss / total_samples
                 epoch_acc = running_corrects.double() / total_samples
@@ -118,14 +109,14 @@ def main():
 
         return model
 
-    # Train the model
+    # Train 
     model = train_model(model, dataloaders, criterion, optimizer, num_epochs=5)
 
-    # Save the model
+    # Save model
     torch.save(model.state_dict(), "pneumonia_densenet121.pth")
     print("Model saved as 'pneumonia_densenet121.pth'.")
 
-    # Evaluate on the test set
+    # eval 
     def evaluate_model(model, dataloader):
         model.eval()
         running_corrects = 0
