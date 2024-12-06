@@ -113,7 +113,7 @@ def main():
     model = train_model(model, dataloaders, criterion, optimizer, num_epochs=5)
 
     # Save model
-    torch.save(model.state_dict(), "pneumonia_densenet121.pth")
+    torch.save(model.state_dict(), "model.pth")
     print("Model saved as 'pneumonia_densenet121.pth'.")
 
     # eval 
