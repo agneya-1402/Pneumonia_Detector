@@ -149,25 +149,16 @@ def evaluate_model(model, dataloader):
 ## Results
 
 ### Sample Metrics
-- **Validation Accuracy**: ~81%
-- **Test Accuracy**: ~88%
-
-### Sample Confusion Matrix
-|                | Predicted NORMAL | Predicted PNEUMONIA |
-|----------------|------------------|----------------------|
-| **Actual NORMAL** | 500              | 50                   |
-| **Actual PNEUMONIA** | 30               | 700                  |
-
+- **Validation Accuracy**: 98.2%
+- **Test Accuracy**: 87.6%
 ---
 
 ## Images
 
 ### Example Input
-#### NORMAL X-Ray:
-![Normal Chest X-Ray](https://example.com/normal.jpg)
 
-#### PNEUMONIA X-Ray:
-![Pneumonia Chest X-Ray](https://example.com/pneumonia.jpg)
+![NORMAL2-IM-0362-0001.jpeg](NORMAL2-IM-0362-0001.jpeg)
+![NORMAL2-IM-0012-0001.jpeg](NORMAL2-IM-0012-0001.jpeg)
 
 ---
 
